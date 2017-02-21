@@ -12,48 +12,6 @@ reload(sys)
 sys.setdefaultencoding( "utf-8" )
 
 
-class OldHousePipeline(object):
-    def __init__(self):
-        conn = MySQLdb.connect(
-            host='#####',
-            port=3306,
-            user='spider',
-            passwd='spider',
-            db='HouseProperty',
-            charset='utf8'
-        )
-        self.conn = conn
-        
-    def process_item(self,item,spider):
-
-        try:
-            self.conn.ping()
-        except:
-            self.conn.ping(True)
-
-        cur = self.conn.cursor()
-        sql="insert into old_house_info (city,name,area,price,avg_price,county,place,address,type,date) values ('"+str(item['city'])+"','"\
-+str(item['name'])+"','"\
-+str(item['area'])+"','"\
-+str(item['price'])+"','"\
-+str(item['avg_price'])+"','"\
-+str(item['county'])+"','"\
-+str(item['place'])+"','"\
-+str(item['address'])+"','"\
-+str(item['house_type'])+"','"\
-+str(item['date'])+"')"
-        try:
-            # 执行sql语句
-            cur.execute(sql)
-            # 提交到数据库执行
-            self.conn.commit()
-        except Exception, e:
-            log.msg("mysql erro " + str(e),_level=logging.ERROR)
-        cur.close()
-        return item
-    def __del__(self):
-        self.conn.close()
-
 
 class AVGPricePipeline(object):
     def __init__(self):
